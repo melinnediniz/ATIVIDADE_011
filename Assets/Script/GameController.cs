@@ -30,9 +30,11 @@ public class GameController : MonoBehaviour
         gameOver.SetActive(true);
     }
 
-    public void RestartGame(string level_name)
+
+
+    public void RestartGame(string levelName)
     {
-        SceneManager.LoadScene(level_name);
+        SceneManager.LoadScene(levelName);
     }
 
     public void ShowNextLevel()
@@ -40,8 +42,8 @@ public class GameController : MonoBehaviour
         next.SetActive(true);
     }
 
-    public void NextLevel(string level_name){
-        SceneManager.LoadScene(level_name);
+    public void NextLevel(string levelName){
+        SceneManager.LoadScene(levelName);
     }
 
 
