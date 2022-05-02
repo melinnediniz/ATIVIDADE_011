@@ -11,10 +11,17 @@ public class GameController : MonoBehaviour
     public Text scoreText;
     public GameObject gameOver;
     public GameObject next;
+    public GameObject resetButton;
+    public GameObject healthBar;
     public bool isOver;
 
     public static GameController instance;
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +36,8 @@ public class GameController : MonoBehaviour
     public void ShowGameOver()
     {
         gameOver.SetActive(true);
+        resetButton.SetActive(false);
+        healthBar.SetActive(false);
     }
 
 
@@ -43,6 +52,8 @@ public class GameController : MonoBehaviour
     {
         next.SetActive(true);
         isOver = true;
+        resetButton.SetActive(false);
+        healthBar.SetActive(false);
     }
 
     public void NextLevel(string levelName){

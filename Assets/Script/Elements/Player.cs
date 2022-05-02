@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -19,6 +20,14 @@ public class Player : MonoBehaviour
     [Header("Fall")]
     private bool isFalling;
     public float fallingLimit;
+
+    [Header("Attack")] 
+    public Transform attackpoint;
+
+    public float attackrange = 0.5f;
+    public LayerMask enemylayer;
+    public int attackDamage;
+    
     
     private Rigidbody2D rig;
     private Animator anim;
@@ -47,7 +56,12 @@ public class Player : MonoBehaviour
             Move();
             Jump();
             CheckRotation();
-    }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                Attack();
+            }
+        }
 }
 
     void CheckLife()
@@ -119,6 +133,18 @@ public class Player : MonoBehaviour
         }
     }
 
+    void Attack()
+    {
+        anim.SetTrigger("attack");
+        Collider2D[] hitEnemy =  Physics2D.OverlapCircleAll(attackpoint.position, attackrange, enemylayer);
+
+        foreach (Collider2D enemy in hitEnemy)
+        {
+            enemy.GetComponent<Stalker>().TakeDamage(attackDamage);
+        }
+    }
+    
+
     void OnCollisionEnter2D(Collision2D col)
     {
         if(col.gameObject.layer == 8)
@@ -133,6 +159,12 @@ public class Player : MonoBehaviour
             TakeDamage(50);
             isJumping = false;
         }
+
+        if (col.gameObject.CompareTag("Enemy"))
+        {
+            TakeDamage(10);
+        }
+        
 
     }
 
@@ -160,7 +192,7 @@ public class Player : MonoBehaviour
             isUnder = false;
         }
     }
-    
+
 
     void CheckRotation()
     {

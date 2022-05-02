@@ -69,7 +69,7 @@ public class StepOnIt : MonoBehaviour
             
             if(height > 0 && !playerDestroyed)
             {
-                col.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 15, ForceMode2D.Impulse);
+                col.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 5, ForceMode2D.Impulse);
                 anim.SetTrigger("die");
                 speed = 0;
                 rb2D.bodyType = RigidbodyType2D.Static;

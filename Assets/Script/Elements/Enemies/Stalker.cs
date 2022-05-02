@@ -9,10 +9,10 @@ public class Stalker : MonoBehaviour
     public float speed;
     public int jumpForce = 6;
     public int health;
+    public int currentHealth;
 
     private Rigidbody2D rb2D;
     private Animator anim;
-    private Player player;
 
     // Start is called before the first frame update
 
@@ -20,13 +20,28 @@ public class Stalker : MonoBehaviour
     {
         rb2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        player = GetComponent<Player>();
     }
 
     // Update is called once per frame
     void Update()
     {
         CheckDistance();
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        anim.SetTrigger("hit");
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        anim.SetBool("die", true);
+        Destroy(gameObject, 1f);
     }
 
     void CheckDistance()
@@ -58,6 +73,7 @@ public class Stalker : MonoBehaviour
             transform.eulerAngles = new Vector3(0f, 180f, 0f);
             rb2D.velocity = new Vector2(-speed, 0);
         }
+        
     }
 
     void StopChasing()
