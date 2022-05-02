@@ -10,14 +10,17 @@ public class Stalker : MonoBehaviour
     public int jumpForce = 6;
     public int health;
 
-    private Rigidbody2D _rb2D;
+    private Rigidbody2D rb2D;
     private Animator anim;
+    private Player player;
 
     // Start is called before the first frame update
+
     void Start()
     {
-        _rb2D = GetComponent<Rigidbody2D>();
+        rb2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        player = GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -25,7 +28,7 @@ public class Stalker : MonoBehaviour
     {
         CheckDistance();
     }
-    
+
     void CheckDistance()
     {
         float distPlayer = Vector2.Distance(transform.position, target.position);
@@ -33,7 +36,6 @@ public class Stalker : MonoBehaviour
         {
             ChasePlayer();
             anim.SetBool("isAround", true);
-            
         }
         else
         {
@@ -46,20 +48,20 @@ public class Stalker : MonoBehaviour
     {
         if(transform.position.x < target.position.x) // esta na esquerda
         {
-            _rb2D.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
-            _rb2D.velocity = new Vector2(speed, 0);
+            rb2D.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            rb2D.velocity = new Vector2(speed, 0);
             transform.eulerAngles = new Vector3(0f, 0f, 0f);
 
         }
         else
         {
             transform.eulerAngles = new Vector3(0f, 180f, 0f);
-            _rb2D.velocity = new Vector2(-speed, 0);
+            rb2D.velocity = new Vector2(-speed, 0);
         }
     }
 
     void StopChasing()
     {
-        _rb2D.velocity = new Vector2(0, 0);
+        rb2D.velocity = new Vector2(0, 0);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,62 +7,76 @@ public class Player : MonoBehaviour
 {
     [Header("Movements")]
     [SerializeField] private float speed;
-
-    public int health;
     [SerializeField] private float jumpForce;
     private bool isJumping;
     private bool doubleJump;
-    
+
+    [Header("Life")]
+    public int health;
+   public int currentHealth;
+
+
     [Header("Fall")]
     private bool isFalling;
-    [SerializeField]public float fallingLimit;
+    public float fallingLimit;
     
     private Rigidbody2D rig;
     private Animator anim;
+
+    [SerializeField] private HealthBar healthBar;
     private bool isUnder;
 
+    
     // Start is called before the first frame update
     void Start()
     {
         rig = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        health = 5;
+        currentHealth = health;
+        healthBar.SetMaxHealth(health);
+ 
     }
 
     // Update is called once per frame
     void Update()
     {
-        CheckLife();
-        Falling();
-        Move();
-        Jump();
-        CheckRotation();
+        if (!GameController.instance.isOver)
+        {
+            CheckLife();
+            Falling();
+            Move();
+            Jump();
+            CheckRotation();
     }
-    
-    public void CheckLife()
+}
+
+    void CheckLife()
     {
-        if (health <= 0)
+        if(currentHealth <= 0)
         {
             anim.SetBool("die", true);
-            StartCoroutine(delay());
-
+            StartCoroutine(Die());
+            GameController.instance.isOver = true;
         }
     }
-
-    IEnumerator delay()
+    
+    public void TakeDamage(int damage)
+    {
+        currentHealth = currentHealth - damage;
+        healthBar.SetHealth(currentHealth);
+        anim.SetBool("hit", true);
+            
+    }
+    
+    IEnumerator Die()
     {
         yield return new WaitForSeconds(2);
         GameController.instance.ShowGameOver();
-        
-    }
-
-    public void TakeDamage(int damage)
-    {
-        health -= damage;
     }
 
     void Move()
     {
+        anim.SetBool("hit", false);
         float movement = Input.GetAxis("Horizontal");
         rig.velocity = new Vector2(movement * speed, rig.velocity.y);
 
@@ -84,6 +99,7 @@ public class Player : MonoBehaviour
 
     void Jump()
     {
+        anim.SetBool("hit", false);
         if(Input.GetButtonDown("Jump") && !isUnder)
         {
             if(!isJumping)
@@ -114,7 +130,7 @@ public class Player : MonoBehaviour
 
         if(col.gameObject.CompareTag("Trap"))
         {
-            health = -10;
+            TakeDamage(50);
             isJumping = false;
         }
 

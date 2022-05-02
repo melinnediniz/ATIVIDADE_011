@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class StepOnIt : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class StepOnIt : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        transform.eulerAngles = new Vector3(0f, 180f, 0f);
         rb2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
     }
@@ -30,16 +32,24 @@ public class StepOnIt : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rb2D.velocity = new Vector2(speed, rb2D.velocity.y);
-
-        colliding = Physics2D.Linecast(rightCol.position, leftCol.position, layer);
-
-        if (colliding)
-        {
-            transform.localScale = new Vector2(transform.localScale.x * -1f, transform.localScale.y);
-            speed *= -1f;
-        }
+        Move();
         CheckRotation();
+    }
+
+    void Move()
+    {
+        if (rb2D.bodyType != RigidbodyType2D.Static)
+        {
+            rb2D.velocity = new Vector2(speed, rb2D.velocity.y);
+
+            colliding = Physics2D.Linecast(rightCol.position, leftCol.position, layer);
+
+            if (colliding)
+            {
+                transform.localScale = new Vector2(transform.localScale.x * -1f, transform.localScale.y);
+                speed *= -1f;
+            }
+        }
     }
     
     
@@ -57,9 +67,9 @@ public class StepOnIt : MonoBehaviour
         {
             float height = col.contacts[0].point.y - headPoint.position.y;
             
-            if(height > 0.1 && !playerDestroyed)
+            if(height > 0 && !playerDestroyed)
             {
-                col.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 10, ForceMode2D.Impulse);
+                col.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 15, ForceMode2D.Impulse);
                 anim.SetTrigger("die");
                 speed = 0;
                 rb2D.bodyType = RigidbodyType2D.Static;
@@ -68,7 +78,7 @@ public class StepOnIt : MonoBehaviour
             }
             else
             {
-                col.gameObject.GetComponent<Player>().TakeDamage(5);
+                col.gameObject.GetComponent<Player>().TakeDamage(10);
                 Debug.Log("Recebe dano");
             }
         }

@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
     public Text scoreText;
     public GameObject gameOver;
     public GameObject next;
+    public bool isOver;
 
     public static GameController instance;
 
@@ -35,15 +36,18 @@ public class GameController : MonoBehaviour
     public void RestartGame(string levelName)
     {
         SceneManager.LoadScene(levelName);
+        isOver = false;
     }
 
     public void ShowNextLevel()
     {
         next.SetActive(true);
+        isOver = true;
     }
 
     public void NextLevel(string levelName){
         SceneManager.LoadScene(levelName);
+        isOver = false;
     }
 
 

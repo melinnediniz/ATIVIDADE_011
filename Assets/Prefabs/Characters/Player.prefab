@@ -145,9 +145,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4baca520c76b32469f231656e07f0e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
-  health: 0
-  jumpForce: 0
+  speed: 5
+  health: 50
+  currentHealth: 0
+  jumpForce: 15
   fallingLimit: -5
 --- !u!95 &6097137329328874754
 Animator:
